@@ -1,0 +1,185 @@
+/* style.css */
+.card {
+    border-radius: 10px !important;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-header,
+.identidadeMartMinaseDom {
+    background: linear-gradient(to right, #00a451, #052846 85%) !important;
+    color: white !important;
+    font-weight: bold !important;
+    text-align: center !important;
+}
+
+.card-body {
+    background-color: #fff !important;
+    padding: 2rem !important;
+}
+
+/* Estilo para fieldset */
+fieldset {
+    border-left: 2px solid #008e40 !important; /* Borda mais fina */
+    border-radius: 8px !important; /* Cantos mais arredondados */
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+    background-color: #f9f9f9 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Sombra sutil para destaque */
+    transition: background-color 0.3s ease !important; /* Transição suave */
+}
+
+fieldset:hover {
+    background-color: #eef5f1 !important; /* Efeito de hover ao passar o mouse */
+}
+
+/* Estilo para legend */
+legend {
+    font-weight: bold !important;
+    font-size: 1.2em !important; /* Tamanho maior para o texto */
+    color: #008e40 !important; /* Cor mais escura para contraste */
+    text-transform: uppercase !important; /* Texto em maiúsculas */
+    padding: 0 10px !important; /* Espaçamento ao redor do texto */
+    border-radius: 5px !important; /* Bordas arredondadas no fundo do título */
+}
+
+.form-group label {
+    color: #333 !important;
+}
+
+/* Botões */
+.btnEnviar:hover {
+    background-color: #008e40 !important;
+    border-color: #008e40 !important;
+}
+
+.btnLimpar {
+    background-color: red !important;
+    border-color: red !important;
+    font-weight: bold !important;
+    color:white!important;
+}
+
+.btnLimpar:hover {
+    background-color: red !important;
+    border-color: red !important;
+   
+}
+
+/* Ajustes para campos longos */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    width: 100% !important;
+    border-radius: 5px !important;
+    border: 1px solid #ccc !important;
+    padding: 10px !important;
+}
+
+/* Responsividade */
+@media (max-width: 767px) {
+    .row {
+        flex-direction: column !important;
+    }
+}
+
+/* Formatação do campo de data */
+input[type="date"] {
+    background-color: #f8f9fa !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    padding: 10px !important;
+}
+
+/* Adiciona margem entre campos do formulário */
+.form-group {
+    margin-bottom: 1rem !important;
+}
+
+/* Estilo do campo de upload de arquivos */
+input[type="file"] {
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    background-color: #ffffff !important;
+}
+
+/* Estilo do botão de envio de arquivos */
+input[type="file"]::file-selector-button {
+    background: linear-gradient(to right, #00a451, #052846 85%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+}
+
+input[type="file"]::file-selector-button::before {
+    content: 'Escolher arquivo' !important;
+    display: block !important;
+    text-align: center !important;
+}
+
+/* Estilo para grupos de rádio */
+.radio-group {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 1rem !important;
+}
+
+.radio-group .form-check {
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.25rem !important;
+    background-color: #f0f0f0 !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.radio-group .form-check:hover {
+    background-color: #e0e0e0 !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.radio-group .form-check-input {
+    position: absolute !important;
+    opacity: 0 !important;
+    cursor: pointer !important;
+}
+
+.radio-group .form-check-label {
+    margin: 0 !important;
+    padding-left: 2rem !important;
+    position: relative !important;
+}
+
+.radio-group .form-check-label::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 1rem !important;
+    height: 1rem !important;
+    border-radius: 50% !important;
+    background-color: #fff !important;
+    border: 2px solid #00a451!important;
+}
+
+.radio-group .form-check-input:checked + .form-check-label::before {
+    background-color: #00a451!important;
+    border-color: #00a451!important;
+}
+
+.radio-group .form-check-input:checked + .form-check-label::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 0.25rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 0.5rem !important;
+    height: 0.5rem !important;
+    border-radius: 50% !important;
+    background-color: #fff !important;
+}

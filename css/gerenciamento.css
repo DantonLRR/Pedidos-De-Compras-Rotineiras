@@ -1,0 +1,372 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.card-header {
+    font-weight: bold;
+    background: linear-gradient(to right, #00a451, #052846 85%);
+    color: white;
+}
+
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.action-buttons {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    /* Espaçamento entre os botões */
+}
+
+.btnSuprimentosAprova,
+.AprovadoSuprimentos,
+#PesquisarGerenciamentoCotacao {
+    background-color: #00a550 !important;
+    border: none !important;
+}
+
+.btnSuprimentosReprova,
+.SuprimentosReprova {
+    background-color: red !important;
+    border: none !important;
+}
+/* /////////////////////////////////////////////////////////////////////// */
+.form-control,
+.form-select {
+    padding: 0.5rem 1rem !important;
+    font-size: 14px !important;
+    border-radius: 5px !important;
+    border: 1px solid #ccc !important;
+    transition: border-color 0.3s ease !important;
+    height: calc(2.25rem + 2px) !important; /* Altura igual para inputs e selects */
+}
+.form-control:focus,
+.form-select:focus {
+    border-color: #00a451 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 164, 81, 0.25) !important;
+}
+/* //////////////////////////////////// */
+
+
+
+
+/* Estilo padrão para os botões */
+.btn {
+    color: white !important;
+    font-weight: bold !important;
+    padding: 10px 20px !important;
+    border-radius: 5px !important;
+    transition: background-color 0.3s ease, transform 0.2s ease !important;
+}
+
+/* Efeitos de hover e foco */
+.btn:hover,
+.btn:focus,
+.AprovadoSuprimentos:hover,
+.AprovadoSuprimentos:focus {
+    background-color: #005f30 !important;
+    /* Ajusta para cor mais escura */
+    transform: scale(1.05) !important;
+    /* Aumenta ligeiramente o botão */
+}
+
+/* Específico para o botão reprovar */
+.btnSuprimentosReprova:hover,
+.btnSuprimentosReprova:focus,
+.SuprimentosReprova:hover,
+.SuprimentosReprova:focus {
+    background-color: darkred !important;
+}
+
+
+
+input[type="date"] {
+    font-size: 14px;
+    padding: 10px;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.TabelaAcompanhamentoMP {
+    margin-top: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .card-header {
+        font-size: 18px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+}
+
+
+/* ///////////////////// */
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+thead.thead-custom,
+modal-title {
+    background: linear-gradient(to right, #00a451, #052846 85%) !important;
+    color: white;
+}
+
+thead th {
+    text-align: center !important;
+    border: 1px solid #dee2e6 !important;
+    white-space: nowrap !important;
+    /* Impede quebra de linha no cabeçalho */
+}
+
+tbody td {
+    text-align: center !important;
+    border: 1px solid #dee2e6 !important;
+    white-space: nowrap !important;
+    /* Impede quebra de linha no corpo da tabela */
+    overflow: hidden !important;
+    /* text-overflow: ellipsis; Adiciona reticências para textos muito longos */
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #f9f9f9 !important;
+}
+
+tbody tr:hover {
+    background-color: #e0e0e0 !important;
+}
+
+table .text-center {
+    vertical-align: middle !important;
+}
+
+/* Estilo para campos numéricos */
+.numeric-field {
+    font-weight: bold !important;
+    color: #333 !important;
+    overflow: hidden !important;
+    /*   text-overflow: ellipsis;  Adiciona reticências para textos muito longos */
+}
+
+/* Responsividade da Tabela */
+@media (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+
+    thead th,
+    tbody td {
+        padding: 8px;
+    }
+
+    .buttons-excel,
+    .buttons-print,
+    .buttons-colvis {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+}
+
+.status-novo {
+    color: blue;
+    background-color: lightblue;
+}
+
+.status-aprovado {
+    color: green;
+    background-color: lightgreen;
+}
+
+.status-reprovado {
+    color: red;
+    background-color: lightcoral;
+}
+
+/* ////////////////////////////////////////////////////// */
+/* Modal Header */
+.modal-header {
+    background: linear-gradient(to right, #00a451, #052846 85%);
+    color: white;
+    font-weight: bold;
+}
+
+/* Modal Body */
+#modalDetalhesConteudo {
+    font-family: Arial, sans-serif;
+}
+
+#modalDetalhesConteudo h5 {
+    color: #00a451;
+    border-bottom: 2px solid #00a451;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#modalDetalhesConteudo ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#modalDetalhesConteudo li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#modalDetalhesConteudo li:last-child {
+    border-bottom: none;
+}
+
+#modalDetalhesConteudo strong {
+    color: #333;
+}
+
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.image-gallery img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* /////////////////////////////////////// */
+/* O modal (tela de fundo) */
+.image-modal {
+    display: block;
+    position: fixed;
+    z-index: 1050;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    text-align: center;
+}
+
+/* A imagem dentro do modal */
+.image-modal .modal-content {
+    margin: auto;
+    display: block;
+    max-width: 80%;
+    max-height: 80%;
+    width: auto;
+    height: auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    object-fit: contain;
+    min-width: 300px;
+    /* Define uma largura mínima */
+    min-height: 300px;
+    /* Define uma altura mínima */
+}
+
+/* O botão "fechar" (x) */
+.image-modal .close-modal {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Transições suaves */
+.image-modal .modal-content,
+.image-modal .close-modal {
+    -webkit-animation: zoom 0.6s;
+    animation: zoom 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
+}
+
+/* ///////////////////////// */
+/* gerado pelo js */
+.statusDoPedidoPosPesquisa {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    color: #333 !important;
+    display: flex !important;
+    gap: 20px !important;
+    /* Espaço entre os itens */
+    align-items: center !important;
+    /* Alinha verticalmente */
+}
+
+.statusDoPedidoPosPesquisa span {
+    white-space: nowrap !important;
+    /* Evita quebra de linha */
+}
+
+.statusDoPedidoPosPesquisa strong {
+    font-weight: bold !important;
+}
+
+.confirmaEscolha {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    /* Fundo escurecido */
+    z-index: 1050 !important;
+    /* Mais alto que o modal principal */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.confirmaEscolha .form-label {
+    background-color: white !important;
+    padding: 20px !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.confirmaEscolha .close-modal {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    font-size: 24px !important;
+    cursor: pointer !important;
+    color: black !important;
+}

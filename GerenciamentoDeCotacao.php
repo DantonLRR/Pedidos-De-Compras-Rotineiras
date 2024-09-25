@@ -21,8 +21,11 @@
     include "../base/conexao_TotvzOracle.php";
     include "config/php/crud_gerenciamento.php";
 
+    $hoje = date('Y-m-d'); // Data atual
+    $primeiroDiaDoMes = date('Y-m-01'); // Primeiro dia do mês atual
+    $ultimoDiaMes = date("Y-m-t"); // Último dia do mês atual no formato Ano-Mês-Dia
 
-    // Exemplo de uso
+
     $pessoaLogada = new PessoaLogada($TotvsOracle, $_SESSION['cpf'], $_SESSION['LOJA']);
 
     // Acessando os dados
@@ -30,7 +33,10 @@
     $dadosDeQuemEstaLogadoCENTROCUSTO = $pessoaLogada->getCentroCusto();
     $dadosDeQuemEstaLogadoCARGO = $pessoaLogada->getCargo();
 
+    $funcoes = new funcoesEmPHP();
+
     ?>
+
     <input class="usu" style="display:none" id="usuarioLogado" value="<?= $_SESSION['nome'] ?>">
     <input class="usu" id="usuarioLogado" value="<?= $_SESSION['nome'] ?>">
     <input class="loja" id="loja" value="<?= $_SESSION['LOJA'] ?>">
@@ -38,40 +44,42 @@
     <input class="" id="dadosDeQuemEstaLogadoCENTROCUSTO" value="<?= $dadosDeQuemEstaLogadoCENTROCUSTO ?>">
     <input class="" id="CARGO" value="<?= $dadosDeQuemEstaLogadoCARGO ?>">
     <div class="container-fluid">
-    <div class="row" id="">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header text-center">
-                    Filtro de Cotações
-                </div>
-                <div class="card-body">
-                    <form class="row g-4 align-items-end">
-                        <div class="col-md-3">
-                            <label for="dataInicio" class="form-label">Data início:</label>
-                            <input type="date" class="form-control" id="dataInicio" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="datafim" class="form-label">Data fim:</label>
-                            <input type="date" class="form-control" id="datafim" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="statusPesquisa" class="form-label">Status:</label>
-                            <select class="form-select" id="statusPesquisa" required>
-                                <option value="" disabled selected>Selecione o status</option>
-                                <option value="NOVO">NOVO</option>
-                                <option value="EM COTAÇÃO">EM COTAÇÃO</option>
-                                <option value="COTADO">COTADO</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3 d-flex align-items-end">
-                            <button type="button" id="PesquisarGerenciamentoCotacao" class="btn w-100">Pesquisar</button>
-                        </div>
-                    </form>
+        <div class="row" id="">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header text-center">
+                        Filtro de Cotações
+                    </div>
+                    <div class="card-body">
+                        <form class="row g-4 align-items-end">
+                            <div class="col-md-3">
+                                <label for="dataInicio" class="form-label">Data início:</label>
+                                <input type="date" value='<?= $primeiroDiaDoMes ?>' class="form-control" id="dataInicio" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="datafim" class="form-label">Data fim:</label>
+                                <input type="date" value='<?= $ultimoDiaMes ?>' class="form-control" id="datafim" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="statusPesquisa" class="form-label">Status:</label>
+                                <select class="form-select" id="statusPesquisa" required>
+                                    <option value="" disabled selected>Selecione o status</option>
+                                    <option value="NOVO">NOVO</option>
+                                    <option value="EM COTAÇÃO">EM COTAÇÃO</option>
+                                    <option value="COTADO">COTADO</option>
+                                    <option value="APROVADO PARA COMPRA">APROVADO PARA COMPRA</option>
+                                    <option value="REPROVADO">REPROVADO</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="button" id="PesquisarGerenciamentoCotacao" class="btn w-100">Pesquisar</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <div class="">
         <div class="container-fluid">
@@ -99,9 +107,7 @@
                         <tbody class='TabelaAcompanhamentoGerenciamentoCotacao'>
                             <?php
                             $FiltrosAcompanhamento = new FiltrosAcompanhamento();
-                            $dataInicio = $_POST['dataInicio'] ?? '';
-                            $datafim = $_POST['datafim'] ?? '';
-                            $buscandoAcompanhamento = $FiltrosAcompanhamento->buscandoCotacoes($oracle, $dataInicio, $datafim);
+                            $buscandoAcompanhamento = $FiltrosAcompanhamento->buscandoCotacoesPesquisa($oracle,  $primeiroDiaDoMes, $ultimoDiaMes, 'NOVO');
                             foreach ($buscandoAcompanhamento as $row) :
                             ?>
                                 <tr data-id="<?= htmlspecialchars($row['ID']) ?>">
@@ -112,96 +118,49 @@
                                     <td class="text-center"><?= htmlspecialchars($row['NUMERO_CHAMADO']) ?></td>
                                     <td class="text-center"><?= htmlspecialchars($row['LOJA']) ?></td>
                                     <td class="text-center"><?= htmlspecialchars($row['CIDADE']) ?></td>
-                                    <td class="text-center statusDoPedido" style="color: <?php switch (htmlspecialchars($row['STATUS'])) {
-                                                                                                case 'NOVO':
-                                                                                                    echo '#007bff'; // Azul
-                                                                                                    break;
-                                                                                                case 'APROVADO':
-                                                                                                    echo '#28a745'; // Verde
-                                                                                                    break;
-                                                                                                case 'REPROVADO':
-                                                                                                    echo '#dc3545'; // Vermelho
-                                                                                                    break;
-                                                                                                default:
-                                                                                                    echo '#6c757d'; // Cinza
-                                                                                            }
-                                                                                            ?> ">
-                                        <?= htmlspecialchars($row['STATUS']) ?></td>
-                                    <td class="text-center statusDoPedido" style="color: <?php switch (htmlspecialchars($row['CLASSIFICACAO_NECESSIDADE'])) {
-                                                                                                case 'BAIXA':
-                                                                                                    echo '#6c757d'; // Cinza
-                                                                                                    break;
-                                                                                                case 'NORMAL':
-                                                                                                    echo '#007bff'; // Azul
-                                                                                                    break;
-                                                                                                case 'URGENTE':
-                                                                                                    echo '#dc3545'; // Vermelho
-                                                                                                    break;
-                                                                                                default:
-                                                                                                    echo '#6c757d'; // Cinza
-                                                                                            }
-                                                                                            ?> ">
-                                        <?= htmlspecialchars($row['CLASSIFICACAO_NECESSIDADE']) ?></td>
+                                    <td class="text-center statusDoPedido" style="color: <?= $funcoes->definirCorStatus(htmlspecialchars($row['STATUS'])) ?>;">
+                                        <?= htmlspecialchars($row['STATUS']) ?>
+                                    </td>
+                                    <td class="text-center statusDoPedido" style="color: <?= $funcoes->definirCorStatus(htmlspecialchars($row['CLASSIFICACAO_NECESSIDADE'])) ?>;">
+                                        <?= htmlspecialchars($row['CLASSIFICACAO_NECESSIDADE']) ?>
+                                    </td>
                                     <td class="text-center open-modal">
-                                        <i class="fa-solid fa-clipboard fa-xl" style="color: <?php switch (htmlspecialchars($row['CLASSIFICACAO_NECESSIDADE'])) {
-                                                                                                    case 'BAIXA':
-                                                                                                        echo '#6c757d'; // Cinza
-                                                                                                        break;
-                                                                                                    case 'NORMAL':
-                                                                                                        echo '#007bff'; // Azul
-                                                                                                        break;
-                                                                                                    case 'URGENTE':
-                                                                                                        echo '#dc3545'; // Vermelho
-                                                                                                        break;
-                                                                                                    default:
-                                                                                                        echo '#6c757d'; // Cinza
-                                                                                                }
-                                                                                                ?> "></i>
+                                        <i class="fa-solid fa-clipboard fa-xl" style="color: <?= $funcoes->definirCorStatus(htmlspecialchars($row['CLASSIFICACAO_NECESSIDADE'])) ?>;"></i>
+                                    </td>
                                 </tr>
                             <?php
                             endforeach;
                             ?>
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="detalhesCotacaoModal" tabindex="-1" aria-labelledby="detalhesCotacaoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style='background: linear-gradient(to right, #00a451, #052846 85%) !important; color: white;'>
-                    <h5 class="modal-title" id="detalhesCotacaoModalLabel">Detalhes da Cotação</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style='background: linear-gradient(to right, #00a451, #052846 85%) !important; color: white;'>
+                <h5 class="modal-title" id="detalhesCotacaoModalLabel">Detalhes da Cotação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalDetalhesConteudo">
+                
                 </div>
-                <div class="modal-body">
-                    <div id="modalDetalhesConteudo">
-                    </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div class="action-buttons" id="actionButtons">
+      
                 </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <div class="action-buttons">
-                        <?php
-                        switch (strtoupper(trim($dadosDeQuemEstaLogadoCENTROCUSTO))) {
-                            case 'SUPRIMENTOS':
-                        ?>
-                                <button type="button" class="btn btn-secondary btnSuprimentosAprova"id='btnSuprimentosAprova'>Aprovar</button>
-                                <button type="button" class="btn btn-secondary btnSuprimentosReprova"id='btnSuprimentosReprova'>Reprovar</button>
-                            <?php
-                                break;
-                            default: ?>
-                        <?php
-                        }
-                        ?>
-                    </div>
-
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                </div>
-
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
+</div>
+
+
 
 
 
@@ -211,12 +170,6 @@
     <script type="text/javascript" src="../base/bootstrap-5.0.2/bootstrap-5.0.2/dist/js/bootstrap.bundle.js"></script>
     <script type="text/javascript" src="../base/DataTables/datatables.min.js"></script>
     <script type="text/javascript" src="../../BASE/DataTables/FixedColumns 4.3.0/FixedColumns-4.3.0/js/dataTables.fixedColumns.min.js"></script>
-    <script type="module">
-        import {
-            criandoHtmlmensagemCarregamento,
-            Toasty
-        } from "../../base/jsGeral.js";
-    </script>
 </body>
 
 </html>

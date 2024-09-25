@@ -1,60 +1,60 @@
 <?php
 class FiltrosAcompanhamento
 {
-    public function buscandoCotacoes($oracle,)
-    {
-        $lista = array();
-        $query = "SELECT a.id,
-                         a.solicitante,
-                         a.departamento,
-                        TO_CHAR(a.data_solicitacao, 'DD/MM/YYYY') AS data_solicitacao,
-                         a.numero_chamado,
-                         a.loja,
-                         a.cidade,
-                         a.prazo_necessario,
-                         a.item,
-                         a.tamanho,
-                         a.cor,
-                         a.modelo,
-                         a.espessura,
-                         a.codigo_fornecedor,
-                         a.tipo_material,
-                         a.marca,
-                         a.quantidade,
-                         a.original_ou_generico,
-                         a.unidade,
-                         a.medida,
-                         a.gas,
-                         a.tensao,
-                         a.potencia,
-                         a.corrente,
-                         a.rosca_solda,
-                         a.descricao,
-                         a.classificacao_necessidade,
-                         a.faturamento,
-                         a.cnpj,
-                         a.endereco,
-                         a.local_entrega,
-                         a.nome_fornecedor,
-                         a.tel_fornecedor,
-                         a.email_fornecedor,
-                         a.data_inclusao,
-                         a.usuario_inclusao,
-                         a.status FROM weboficial.WEB_ComprasRotineiras a      
-                         where a.status ='NOVO'   
-                           ";
-        $resultado = oci_parse($oracle, $query);
-        oci_execute($resultado);
+    // public function buscandoCotacoes($oracle,)
+    // {
+    //     $lista = array();
+    //     $query = "SELECT a.id,
+    //                      a.solicitante,
+    //                      a.departamento,
+    //                     TO_CHAR(a.data_solicitacao, 'DD/MM/YYYY') AS data_solicitacao,
+    //                      a.numero_chamado,
+    //                      a.loja,
+    //                      a.cidade,
+    //                      a.prazo_necessario,
+    //                      a.item,
+    //                      a.tamanho,
+    //                      a.cor,
+    //                      a.modelo,
+    //                      a.espessura,
+    //                      a.codigo_fornecedor,
+    //                      a.tipo_material,
+    //                      a.marca,
+    //                      a.quantidade,
+    //                      a.original_ou_generico,
+    //                      a.unidade,
+    //                      a.medida,
+    //                      a.gas,
+    //                      a.tensao,
+    //                      a.potencia,
+    //                      a.corrente,
+    //                      a.rosca_solda,
+    //                      a.descricao,
+    //                      a.classificacao_necessidade,
+    //                      a.faturamento,
+    //                      a.cnpj,
+    //                      a.endereco,
+    //                      a.local_entrega,
+    //                      a.nome_fornecedor,
+    //                      a.tel_fornecedor,
+    //                      a.email_fornecedor,
+    //                      a.data_inclusao,
+    //                      a.usuario_inclusao,
+    //                      a.status FROM weboficial.WEB_ComprasRotineiras a      
+    //                      where a.status ='NOVO'   
+    //                        ";
+    //     $resultado = oci_parse($oracle, $query);
+    //     oci_execute($resultado);
 
-        while ($row = oci_fetch_assoc($resultado)) {
-            array_push($lista, $row);
-        }
-        return $lista;
-    }
+    //     while ($row = oci_fetch_assoc($resultado)) {
+    //         array_push($lista, $row);
+    //     }
+    //     return $lista;
+    // }
     public function buscandoCotacoesPesquisa($oracle, $dataInicio = '', $datafim = '', $statusPesquisa)
     {
         $lista = array();
-    
+
         // Use parâmetros para evitar SQL Injection
         $query = "SELECT a.id,
                     a.solicitante,
@@ -95,35 +95,30 @@ class FiltrosAcompanhamento
                     a.status
                     FROM weboficial.WEB_ComprasRotineiras a
                     WHERE a.status = :statusPesquisa
-                    AND a.data_solicitacao BETWEEN TO_DATE(:dataInicio, 'YYYY-MM-DD') AND TO_DATE(:datafim, 'YYYY-MM-DD')";
-    
+                    AND TO_CHAR(a.data_solicitacao,'YYYY-MM-DD' ) BETWEEN :dataInicio AND :datafim
+                    ORDER BY a.id DESC
+                    ";
         // Preparar a query
         $resultado = oci_parse($oracle, $query);
-    
         // Vincular os parâmetros
         oci_bind_by_name($resultado, ':statusPesquisa', $statusPesquisa);
         oci_bind_by_name($resultado, ':dataInicio', $dataInicio);
-        oci_bind_by_name($resultado, ':datafim', $datafim);    
-    
+        oci_bind_by_name($resultado, ':datafim', $datafim);
         // Exibir a consulta para depuração
         // echo "Consulta: $query\n";
         // echo "Parâmetros: status='$statusPesquisa', dataInicio='$dataInicio', datafim='$datafim'\n";
-    
         // Executar a query
         if (!oci_execute($resultado)) {
             $error = oci_error($resultado);
             echo "Erro na execução da consulta: " . $error['message'] . "\n";
         }
-    
+
         while ($row = oci_fetch_assoc($resultado)) {
             array_push($lista, $row);
         }
-    
+
         return $lista;
     }
-    
-    
-    
 }
 class InformacoesCotacoes
 {
@@ -397,5 +392,26 @@ class PessoaLogada
     public function getCargo()
     {
         return $this->cargo;
+    }
+}
+class funcoesEmPHP
+{
+    public function definirCorStatus($status)
+    {
+        switch ($status) {
+            case 'NOVO':
+            case 'NORMAL':
+                return '#007bff';
+            case 'COTADO':
+            case 'EM COTAÇÃO':
+                return '#28a745';
+            case 'REPROVADO':
+            case 'URGENTE':
+                return '#dc3545';
+            case 'BAIXA':
+                return '#6c757d';
+            default:
+                return '#6c757d';
+        }
     }
 }

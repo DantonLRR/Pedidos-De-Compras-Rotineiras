@@ -10,8 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtId = oci_parse($oracle, $queryId);
         oci_bind_by_name($stmtId, ':cotacaoId', $cotacaoId);
         oci_execute($stmtId);
-
-        // Fetch the result
         $row = oci_fetch_assoc($stmtId);
         if ($row) {
             // Pega o valor do campo 'STATUS'
@@ -47,7 +45,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $response["mensagem"] = "Erro ao atualizar o status para 'COTADO'.";
                     }
                     break;
-
+                case 'COTADO':
+                    // Consulta para atualizar o status para 'APROVADO PARA COMPRA'
+                    $sql = "UPDATE weboficial.WEB_ComprasRotineiras 
+                                       SET STATUS = 'APROVADO PARA COMPRA'
+                                       WHERE id = :cotacaoId";
+                    $stmt = oci_parse($oracle, $sql);
+                    oci_bind_by_name($stmt, ':cotacaoId', $cotacaoId);
+                    if (oci_execute($stmt)) {
+                        $response["sucesso"] = 1;
+                        $response["mensagem"] = "Cotação aprovada para 'APROVADO PARA COMPRA'.";
+                    } else {
+                        $response["mensagem"] = "Erro ao atualizar o status para 'APROVADO PARA COMPRA'.";
+                    }
+                    break;
                 default:
                     $response["mensagem"] = "Status não reconhecido.";
                     break;

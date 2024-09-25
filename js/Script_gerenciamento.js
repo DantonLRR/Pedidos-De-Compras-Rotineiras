@@ -5,14 +5,21 @@ import {
 ////////////////////////////////////////////////////////////////////////////
 //parte de pesquisa
 var dataInicio, dataFim, statusPesquisa;
+function recuperaDadosDePesquisa() {
+    dataInicio = $('#dataInicio').val();
+    dataFim = $('#datafim').val();
+    statusPesquisa = $('#statusPesquisa').val();
+    if (!statusPesquisa) {
+        statusPesquisa = 'NOVO';
+    }
 
-function recuperaDadosDePesquisa(){
-     dataInicio = $('#dataInicio').val();
-     dataFim = $('#datafim').val();
-     statusPesquisa = $('#statusPesquisa').val();
+    console.log("Data Início:", dataInicio);
+    console.log("Data Fim:", dataFim);
+    console.log("Status:", statusPesquisa);
 }
-
 function chamaTelaDePesquisa(dataInicio, dataFim, statusPesquisa) {
+
+
     $.ajax({
         url: "config/PesquisarGerenciamentoCotacao.php",
         method: 'POST',
@@ -23,12 +30,7 @@ function chamaTelaDePesquisa(dataInicio, dataFim, statusPesquisa) {
         }
     });
 }
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////-
 function DefineCorStatus(status) {
     switch (status) {
         case 'NOVO':
@@ -41,7 +43,6 @@ function DefineCorStatus(status) {
             return '#6c757d'; // Cinza
     }
 }
-
 // Função para mapear a classificação para as cores
 function DefineCorClassificacao(classificacao) {
     switch (classificacao) {
@@ -62,7 +63,7 @@ function verificarInformacao(valor) {
 /////////////////////////////////////////////////////////
 //modal de confirmação de escolha
 function confirmaEscolha(Texto, btnSetor) {
-    var escondeCampoJustiticativa = (btnSetor === 'SuprimentosReprova') ? '' : 'style="display:none"';
+    var escondeCampoJustiticativa = (btnSetor === 'SuprimentosReprova' || btnSetor === 'GerenteReprova') ? '' : 'style="display:none"';
     var modal = `
     <div id="confirmaEscolha" class="confirmaEscolha">
         <div class="form-label statusDoPedidoPosPesquisa">
@@ -72,7 +73,6 @@ function confirmaEscolha(Texto, btnSetor) {
             <textarea class="form-control" id="JustificativaReprova" name="JustificativaReprova"
             placeholder="Digite aqui a justificativa para reprovar a cotação"></textarea>
         </div>
-   
             <button type="button" class="btn btn-secondary ${btnSetor}" id="${btnSetor}">SIM</button>
             <button type="button" class="btn btn-secondary FECHA-MODAL">Fechar</button>
         </div>
@@ -97,10 +97,28 @@ function confirmaEscolha(Texto, btnSetor) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
+// Função para limpar eventos de clique
+function limparEventos() {
+    const botoes = [
+        '#btnSuprimentosAprova',
+        '#btnSuprimentosReprova',
+        '#SuprimentosReprova',
+        '#AprovadoSuprimentos',
+        '#btnGerenteAprova',
+        '#AprovadoGerente',
+        '#btnGerenteReprova',
+        '#GerenteReprova'
+    ];
+
+    botoes.forEach(botao => {
+        $(document).off('click', botao);
+    });
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
 $('#PesquisarGerenciamentoCotacao').on('click', function (a) {
     a.preventDefault();
     recuperaDadosDePesquisa()
-
     // console.log(dataInicio);
     // console.log(dataFim);
     // console.log(LojaFiltro);
@@ -109,9 +127,7 @@ $('#PesquisarGerenciamentoCotacao').on('click', function (a) {
     } else {
         criandoHtmlmensagemCarregamento("exibir");
         chamaTelaDePesquisa(dataInicio, dataFim, statusPesquisa)
-
     }
-
 });
 
 
@@ -120,9 +136,9 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         scrollY: "350px",
         scrollX: true,
-        fixedColumns: {
-            left: 2
-        },
+        // fixedColumns: {
+        //     left: 2
+        // },
         language: {
             sEmptyTable: "Nenhum registro encontrado",
             sInfo: " _START_ até _END_ de _TOTAL_ registros...",
@@ -142,7 +158,7 @@ $(document).ready(function () {
                 sLast: "Último"
             }
         },
-        order: [[8, 'desc']]
+        order: [[8, 'desc'], [3, 'asc']]
     });
 });
 $(document).ready(function () {
@@ -160,6 +176,45 @@ $(document).ready(function () {
                 // aqui eu pego minha resposta(respostaEmJSON) da pagina, que é um objeto JSON, o datatype json converte o bjeto json em javascript 
                 // e ai usamos a resposta da pagina como se fosse um Array
                 // console.log(respostaEmJSON[0].imagens);
+                let botoesHTML = '';
+                let dadosDeQuemEstaLogadoCENTROCUSTO = $('#dadosDeQuemEstaLogadoCENTROCUSTO').val();
+                let CARGO = $('#CARGO').val();
+                if (respostaEmJSON[0].STATUS === 'NOVO' || respostaEmJSON[0].STATUS === 'EM COTAÇÃO' || respostaEmJSON[0].STATUS === 'COTADO') {
+
+
+                    if (dadosDeQuemEstaLogadoCENTROCUSTO.trim().toUpperCase() == 'SUPRIMENTOS' && respostaEmJSON[0].STATUS != 'COTADO') {
+                        botoesHTML += `
+                                <button type="button" class="btn btn-secondary btnSuprimentosAprova" id="btnSuprimentosAprova">Aprovar</button>
+                                <button type="button" class="btn btn-secondary btnSuprimentosReprova" id="btnSuprimentosReprova">Reprovar</button>
+                            `;
+                    }
+
+
+
+
+
+                    else if (dadosDeQuemEstaLogadoCENTROCUSTO.trim().toUpperCase() == 'SUPRIMENTOS' && respostaEmJSON[0].STATUS === 'COTADO') {
+                        botoesHTML += `
+                         <label for="mapaDeCotacao">Mapa de Cotação:</label>
+                        <input type="file" class="form-control" id="mapaDeCotacao" name="mapaDeCotacao[]" accept=".xls,.xlsx" multiple>`;
+                    }
+
+
+
+
+
+                    else if (CARGO.toUpperCase().includes('GERENTE') && respostaEmJSON[0].STATUS === 'COTADO') {
+                        botoesHTML += `
+                                <button type="button" class="btn btn-secondary btnGerenteAprova" id="btnGerenteAprova">Aprovar</button>
+                                <button type="button" class="btn btn-secondary btnGerenteReprova" id="btnGerenteReprova">Reprovar</button>
+                            `;
+                    }
+
+
+
+
+                }
+
                 var html = `
                             <label for="datafim" class="form-label statusDoPedidoPosPesquisa">
                                 <span>ID: <strong>${verificarInformacao(respostaEmJSON[0].ID)}</strong></span>
@@ -231,71 +286,106 @@ $(document).ready(function () {
                             `;
                 // Insere o HTML no modal
                 $('#modalDetalhesConteudo').html(html);
+                // Insere o HTML dos botoes no modal
+                $('#actionButtons').html(botoesHTML);
                 criandoHtmlmensagemCarregamento("ocultar");
+                // limpa os cliques da função, ja que estamos usando a mesma função nas duas telas o on faz os cliques ficarem acumulados, entao o off limpa o clique 
+                // $(document).off('click', '#btnSuprimentosAprova');
+                // $(document).off('click', '#btnSuprimentosReprova');
+                // $(document).off('click', '#SuprimentosReprova');
+                // $(document).off('click', '#AprovadoSuprimentos');
+                // $(document).off('click', '#btnGerenteAprova');
+                // $(document).off('click', '#AprovadoGerente');
+                // $(document).off('click', '#btnGerenteReprova');
+                // $(document).off('click', '#GerenteReprova');
 
+                // Limpa eventos
+                limparEventos();
 
+                // APROVASuprimentos //////////////////////////////////////////////////////////////////////////
                 $(document).on('click', '#btnSuprimentosAprova', function (a) {
+                    a.preventDefault();
                     confirmaEscolha('Aprovar', 'AprovadoSuprimentos');
-
-
-                    $(document).off('click', '#AprovadoSuprimentos').on('click', '#AprovadoSuprimentos', function (a) {
-                        a.preventDefault();
-                        console.log('ID da Cotação:', cotacaoId);
-                        $.ajax({
-                            url: 'config/UpdateCotacaoSuprimentos.php',
-                            type: 'POST',
-                            data: { id: cotacaoId, opcaoEscolhida: "Aprovar" },
-                            dataType: 'json',
-                            success: function (respostaEmJSONAPROVACAO) {
-                                if (respostaEmJSONAPROVACAO.sucesso == 1) {
-                                    Toasty("Sucesso", respostaEmJSONAPROVACAO.mensagem, "#00a550");
-                                    $('#confirmaEscolha').remove();
-                                } else {
-                                    Toasty("Erro", respostaEmJSONAPROVACAO.mensagem, "#E20914");
-                                }
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                Toasty("Erro", "Erro na comunicação com o servidor.", "#E20914");
-                            }
-                        });
+                    $(document).on('click', '#AprovadoSuprimentos', function (F) {
+                        F.preventDefault();
+                        atualizarCotacao(cotacaoId, 'Aprovar');
                     });
                 });
+
+                // REPROVASuprimentos //////////////////////////////////////////////////////////////////////////
                 $(document).on('click', '#btnSuprimentosReprova', function (a) {
                     $('#detalhesCotacaoModal').modal('hide');
                     confirmaEscolha('Reprovar', 'SuprimentosReprova');
                 });
                 $(document).on('click', '#SuprimentosReprova', function (a) {
                     a.preventDefault();
-                    console.log('ID da Cotação:', cotacaoId);
                     var JustificativaReprova = $('#JustificativaReprova').val();
 
                     if (JustificativaReprova == '') {
-                        Toasty("Erro", "Para reprovar a cotação por favor adicione uma justificativa.", "#E20914");
+                        Toasty("Erro", "Para reprovar a cotação, por favor adicione uma justificativa.", "#E20914");
                     } else {
-                        $.ajax({
-                            url: 'config/UpdateCotacaoSuprimentos.php',
-                            type: 'POST',
-                            data: { id: cotacaoId, opcaoEscolhida: "Reprovar", justificativa: JustificativaReprova },
-                            dataType: 'json',
-                            success: function (respostaEmJSONAPROVACAO) {
-                                if (respostaEmJSONAPROVACAO.sucesso == 1) {
-                                    Toasty("Sucesso", respostaEmJSONAPROVACAO.mensagem, "#00a550");
-                                    $('#confirmaEscolha').remove();
-                                } else {
-                                    Toasty("Erro", respostaEmJSONAPROVACAO.mensagem, "#E20914");
-                                }
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                Toasty("Erro", "Erro na comunicação com o servidor.", "#E20914");
-                            }
-                        });
+                        atualizarCotacao(cotacaoId, 'Reprovar', JustificativaReprova);
                     }
                 });
 
+                // APROVAgerente //////////////////////////////////////////////////////////////////////////
+                $(document).on('click', '#btnGerenteAprova', function (a) {
+                    a.preventDefault();
+                    confirmaEscolha('Aprovar', 'AprovadoGerente');
+                    $(document).on('click', '#AprovadoGerente', function (F) {
+                        F.preventDefault();
+                        atualizarCotacao(cotacaoId, 'Aprovar');
+                    });
+                });
+                $(document).on('click', '#btnGerenteReprova', function (a) {
+                    $('#detalhesCotacaoModal').modal('hide');
+                    confirmaEscolha('Reprovar', 'GerenteReprova');
+                });
+
+                // REPROVAGerente //////////////////////////////////////////////////////////////////////////
+                $(document).on('click', '#GerenteReprova', function (a) {
+                    a.preventDefault();
+                    var JustificativaReprova = $('#JustificativaReprova').val();
+
+                    if (JustificativaReprova == '') {
+                        Toasty("Erro", "Para reprovar a cotação, por favor adicione uma justificativa.", "#E20914");
+                    } else {
+                        atualizarCotacao(cotacaoId, 'Reprovar', JustificativaReprova);
+                    }
+                });
             }
         });
     });
 });
+
+
+function atualizarCotacao(cotacaoId, opcaoEscolhida, justificativa = null) {
+    $.ajax({
+        url: 'config/UpdateCotacao.php',
+        type: 'POST',
+        data: {
+            id: cotacaoId,
+            opcaoEscolhida: opcaoEscolhida,
+            justificativa: justificativa
+        },
+        dataType: 'json',
+        success: function (respostaEmJSONAPROVACAO) {
+            if (respostaEmJSONAPROVACAO.sucesso == 1) {
+                Toasty("Sucesso", respostaEmJSONAPROVACAO.mensagem, "#00a550");
+                $('#confirmaEscolha').remove();
+                $('#detalhesCotacaoModal').modal('hide');
+                criandoHtmlmensagemCarregamento("exibir");
+                recuperaDadosDePesquisa();
+                chamaTelaDePesquisa(dataInicio, dataFim, statusPesquisa);
+            } else {
+                Toasty("Erro", respostaEmJSONAPROVACAO.mensagem, "#E20914");
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            Toasty("Erro", "Erro na comunicação com o servidor.", "#E20914");
+        }
+    });
+}
 
 $(document).ready(function () {
     // Função para abrir a imagem expandida

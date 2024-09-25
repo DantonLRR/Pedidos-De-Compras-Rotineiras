@@ -25,16 +25,21 @@ body {
 
 .btnSuprimentosAprova,
 .AprovadoSuprimentos,
-#PesquisarGerenciamentoCotacao {
+.btnGerenteAprova,
+.AprovadoGerente,
+ #PesquisarGerenciamentoCotacao {
     background-color: #00a550 !important;
     border: none !important;
 }
 
 .btnSuprimentosReprova,
-.SuprimentosReprova {
+.SuprimentosReprova,
+.btnGerenteReprova,
+.GerenteReprova {
     background-color: red !important;
     border: none !important;
 }
+
 /* /////////////////////////////////////////////////////////////////////// */
 .form-control,
 .form-select {
@@ -43,13 +48,16 @@ body {
     border-radius: 5px !important;
     border: 1px solid #ccc !important;
     transition: border-color 0.3s ease !important;
-    height: calc(2.25rem + 2px) !important; /* Altura igual para inputs e selects */
+    height: calc(2.25rem + 2px) !important;
+    /* Altura igual para inputs e selects */
 }
+
 .form-control:focus,
 .form-select:focus {
     border-color: #00a451 !important;
     box-shadow: 0 0 0 0.2rem rgba(0, 164, 81, 0.25) !important;
 }
+
 /* //////////////////////////////////// */
 
 
@@ -68,7 +76,11 @@ body {
 .btn:hover,
 .btn:focus,
 .AprovadoSuprimentos:hover,
-.AprovadoSuprimentos:focus {
+.AprovadoSuprimentos:focus,
+.btnGerenteAprova:hover,
+.btnGerenteAprova:focus,
+.AprovadoGerente :hover,
+.AprovadoGerente :focus {
     background-color: #005f30 !important;
     /* Ajusta para cor mais escura */
     transform: scale(1.05) !important;
@@ -79,7 +91,11 @@ body {
 .btnSuprimentosReprova:hover,
 .btnSuprimentosReprova:focus,
 .SuprimentosReprova:hover,
-.SuprimentosReprova:focus {
+.SuprimentosReprova:focus,
+.btnGerenteReprova:hover,
+.btnGerenteReprova:focus,
+.GerenteReprova:hover,
+.GerenteReprova:focus {
     background-color: darkred !important;
 }
 

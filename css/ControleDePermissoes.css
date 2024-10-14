@@ -1,0 +1,50 @@
+.ocultar {
+    display: none;
+}
+.linhaMarcada tr:hover {
+    background-color: lightblue !important;
+}
+
+.trr {
+    cursor: pointer !important;
+}
+
+.bg-success {
+    background: linear-gradient(to right, #00a451, #052846 85%) !important;
+}
+
+.font-weight-bold {
+    font-weight: bold !important;
+}
+
+.text-white {
+    color: white !important;
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6 !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.table-man-dados, .table-permissao {
+    width: 100% !important;
+    height: 280px !important;
+}
+
+.degrade {
+    background: linear-gradient(to right, #00c6ff, #0072ff) !important;
+    color: #fff !important;
+}
+
+.selecionado2 {
+    background-color: #0072ff !important;
+    color: white !important;
+}
+
+input[type='checkbox'] {
+    cursor: pointer !important;
+}
+

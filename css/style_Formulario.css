@@ -183,3 +183,15 @@ input[type="file"]::file-selector-button::before {
     border-radius: 50% !important;
     background-color: #fff !important;
 }
+
+.BotaoAdicionaItensnaCotacao {
+    padding-top: 20px !important;
+    color:#00a550 !important; /* Cor inicial */
+    cursor: pointer !important; /* Indica que é clicável */
+    transition: color 0.3s ease, transform 0.3s ease !important; /* Adiciona efeito de transição */
+}
+
+.BotaoAdicionaItensnaCotacao:hover {
+    color: #058542 !important; /* Cor ao passar o mouse */
+    transform: scale(1.1) !important; /* Aumenta o ícone */
+}

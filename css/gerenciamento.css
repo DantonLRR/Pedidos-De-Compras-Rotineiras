@@ -27,7 +27,8 @@ body {
 .AprovadoSuprimentos,
 .btnGerenteAprova,
 .AprovadoGerente,
- #PesquisarGerenciamentoCotacao {
+#PesquisarGerenciamentoCotacao,
+#btnPesquisaDireta {
     background-color: #00a550 !important;
     border: none !important;
 }
@@ -80,7 +81,9 @@ body {
 .btnGerenteAprova:hover,
 .btnGerenteAprova:focus,
 .AprovadoGerente :hover,
-.AprovadoGerente :focus {
+.AprovadoGerente :focus,
+#btnPesquisaDireta:hover,
+#btnPesquisaDireta:focus {
     background-color: #005f30 !important;
     /* Ajusta para cor mais escura */
     transform: scale(1.05) !important;
@@ -114,16 +117,7 @@ input[type="date"] {
     margin-top: 20px;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .card-header {
-        font-size: 18px;
-    }
 
-    .btn {
-        font-size: 14px;
-    }
-}
 
 
 /* ///////////////////// */
@@ -176,24 +170,6 @@ table .text-center {
     /*   text-overflow: ellipsis;  Adiciona reticências para textos muito longos */
 }
 
-/* Responsividade da Tabela */
-@media (max-width: 768px) {
-    table {
-        font-size: 14px;
-    }
-
-    thead th,
-    tbody td {
-        padding: 8px;
-    }
-
-    .buttons-excel,
-    .buttons-print,
-    .buttons-colvis {
-        font-size: 12px;
-        padding: 3px 8px;
-    }
-}
 
 .status-novo {
     color: blue;
@@ -385,4 +361,70 @@ table .text-center {
     font-size: 24px !important;
     cursor: pointer !important;
     color: black !important;
+}
+
+.form-control,
+.form-select {
+    width: 100%;
+    /* Garante que os elementos ocupem toda a largura da coluna */
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        flex: 0 0 24%;
+        /* Ajuste para garantir que fiquem 4 itens na mesma linha */
+        max-width: 24%;
+    }
+}
+
+/* Estilo para o botão de pesquisa direta */
+.btnPesquisaDireta {
+    height: 38px !important;
+    width: 40px!important;
+    display: flex!important;
+    align-items: center!important;
+    justify-content: center!important;
+    padding: 0!important;
+    /* Remove padding padrão do botão */
+    border: none!important;
+    /* Remove borda padrão do botão */
+    background-color: #007bff!important;
+    /* Cor de fundo do botão */
+    border-radius: 4px!important;
+    /* Borda arredondada */
+    cursor: pointer!important;
+    /* Cursor de mão ao passar o mouse */
+}
+
+/* Estilo para o ícone dentro do botão */
+.btnPesquisaDireta i {
+    color: #ffffff!important;
+    /* Cor do ícone */
+    margin-left: 2px!important;
+    /* Espaçamento à esquerda do ícone */
+}
+
+/* Efeito de hover para o botão */
+.btnPesquisaDireta:hover {
+    background-color: #0056b3!important;
+    /* Cor de fundo ao passar o mouse */
+}
+
+/* Estilo para o grupo de input com botão */
+.input-group {
+    display: flex!important;
+    align-items: stretch!important;
+    width: 100%!important;
+}
+
+/* Estilo para o input dentro do grupo */
+.input-group .form-control {
+    border-top-right-radius: 0!important;
+    border-bottom-right-radius: 0!important;
+}
+
+/* Estilo para o botão dentro do grupo */
+.input-group .btnPesquisaDireta {
+    border-top-left-radius: 0!important;
+    border-bottom-left-radius: 0!important;
 }

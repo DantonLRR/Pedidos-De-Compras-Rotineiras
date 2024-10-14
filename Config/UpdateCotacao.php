@@ -32,18 +32,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     break;
                 case 'EM COTAÇÃO':
-                    // Consulta para atualizar o status para 'COTADO'
-                    $sql = "UPDATE weboficial.WEB_ComprasRotineiras 
-                                   SET STATUS = 'COTADO'
-                                   WHERE id = :cotacaoId";
-                    $stmt = oci_parse($oracle, $sql);
-                    oci_bind_by_name($stmt, ':cotacaoId', $cotacaoId);
-                    if (oci_execute($stmt)) {
-                        $response["sucesso"] = 1;
-                        $response["mensagem"] = "Cotação aprovada para 'COTADO'.";
+                    // Verifica se o arquivo foi enviado
+                    if (isset($_FILES['mapaDeCotacao']) && $_FILES['mapaDeCotacao']['error'] == 0) {
+                        // Define o diretório de upload
+                        $uploadDir = '../Config/MapasDeCotacoes/';
+                    
+                        // Gera um nome de arquivo único para evitar conflitos
+                        $fileName = uniqid() . '_' . basename($_FILES['mapaDeCotacao']['name']);
+                        $filePath = $uploadDir . $fileName;
+                    
+                        // Move o arquivo para o diretório de MapasDeCotacoes
+                        if (move_uploaded_file($_FILES['mapaDeCotacao']['tmp_name'], $filePath)) {
+                            // Atualiza o status e o caminho do arquivo no banco de dados
+                            $sql = "UPDATE weboficial.WEB_ComprasRotineiras 
+                                    SET 
+                                        STATUS = 'COTADO',
+                                        MapaDeCotacao_Caminho = :mapaDeCotacao_Caminho
+                                    WHERE id = :cotacaoId";
+                    
+                            // Prepara a instrução SQL
+                            $stmt = oci_parse($oracle, $sql);
+                    
+                            // Vincula os parâmetros
+                            oci_bind_by_name($stmt, ':cotacaoId', $cotacaoId);
+                            oci_bind_by_name($stmt, ':mapaDeCotacao_Caminho', $filePath);
+                    
+                            // Executa a query
+                            if (oci_execute($stmt, OCI_DEFAULT)) {
+                                // Confirma a transação
+                                oci_commit($oracle);
+                    
+                                $response["sucesso"] = 1;
+                                $response["mensagem"] = "Mapa de cotação inserido, Cotação aprovada para 'COTADO'.";
+                            } else {
+                                // Reverte a transação em caso de falha
+                                oci_rollback($oracle);
+                    
+                                $response["mensagem"] = "Erro ao atualizar o status para 'COTADO'.";
+                            }
+                        } else {
+                            $response["mensagem"] = "Erro ao mover o arquivo.";
+                        }
                     } else {
-                        $response["mensagem"] = "Erro ao atualizar o status para 'COTADO'.";
+                        $response["mensagem"] = "Erro ao enviar o arquivo Mapa de Cotação.";
                     }
+                    
+                    // // Consulta para atualizar o status para 'COTADO'
+                    // $sql = "UPDATE weboficial.WEB_ComprasRotineiras 
+                    //                SET 
+                    //                STATUS = 'COTADO',
+                    //                MapaDeCotacao = 
+                    //                WHERE id = :cotacaoId";
+                    // $stmt = oci_parse($oracle, $sql);
+                    // oci_bind_by_name($stmt, ':cotacaoId', $cotacaoId);
+                    // if (oci_execute($stmt)) {
+                    //     $response["sucesso"] = 1;
+                    //     $response["mensagem"] = "Cotação aprovada para 'COTADO'.";
+                    // } else {
+                    //     $response["mensagem"] = "Erro ao atualizar o status para 'COTADO'.";
+                    // }
                     break;
                 case 'COTADO':
                     // Consulta para atualizar o status para 'APROVADO PARA COMPRA'
